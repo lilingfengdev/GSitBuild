@@ -43,6 +43,11 @@
                                     <pattern>${project.groupId}.mcv.x</pattern>
                                     <shadedPattern>${project.groupId}.mcv.${project.artifactId}</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>org/bukkit/craftbukkit/v1_[^/]+/</pattern>
+                                    <shadedPattern>org/bukkit/craftbukkit/${mcv.version}/</shadedPattern>
+                                    <rawString>true</rawString>
+                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>

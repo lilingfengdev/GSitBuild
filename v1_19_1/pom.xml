@@ -44,12 +44,9 @@
                                     <shadedPattern>${project.groupId}.mcv.${project.artifactId}</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>org.bukkit.craftbukkit.v1_17_R1</pattern>
-                                    <shadedPattern>org.bukkit.craftbukkit.${mcv.version}</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.bukkit.craftbukkit.v1_18_R1</pattern>
-                                    <shadedPattern>org.bukkit.craftbukkit.${mcv.version}</shadedPattern>
+                                    <pattern>org/bukkit/craftbukkit/v1_[^/]+/</pattern>
+                                    <shadedPattern>org/bukkit/craftbukkit/${mcv.version}/</shadedPattern>
+                                    <rawString>true</rawString>
                                 </relocation>
                             </relocations>
                         </configuration>
