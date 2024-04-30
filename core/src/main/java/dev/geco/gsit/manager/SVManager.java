@@ -10,10 +10,8 @@ public class SVManager {
 
     private final GSitMain GPM;
 
-    private final String LATEST = "v1_20_3";
-
     private final String SERVER_VERSION;
-    private String PACKAGE_PATH;
+    private final String PACKAGE_PATH;
     private boolean AVAILABLE = true;
 
     protected final HashMap<String, String> VERSION_MAPPING = new HashMap<>(); {
@@ -22,19 +20,15 @@ public class SVManager {
         VERSION_MAPPING.put("v1_19_2", "v1_19_1");
         VERSION_MAPPING.put("v1_20_1", "v1_20");
         VERSION_MAPPING.put("v1_20_4", "v1_20_3");
+        VERSION_MAPPING.put("v1_20_6", "v1_20_5");
     }
 
     public SVManager(GSitMain GPluginMain) {
         GPM = GPluginMain;
         String version = Bukkit.getServer().getBukkitVersion();
         SERVER_VERSION = version.substring(0, version.indexOf('-'));
-        PACKAGE_PATH = GPM.getClass().getPackage().getName() + ".mcv." + getPackageVersion() + "_m";
-        if(hasPackageClass("objects.SeatEntity")) return;
-        PACKAGE_PATH = PACKAGE_PATH.substring(0, PACKAGE_PATH.length() - 2);
-        if(hasPackageClass("objects.SeatEntity")) return;
-        PACKAGE_PATH = GPM.getClass().getPackage().getName() + ".mcv." + LATEST + "_m";
-        if(hasPackageClass("objects.SeatEntity")) return;
-        PACKAGE_PATH = PACKAGE_PATH.substring(0, PACKAGE_PATH.length() - 2);
+        boolean isMojangMappingEnvironment = isMojangMappingEnvironment();
+        PACKAGE_PATH = GPM.getClass().getPackage().getName() + ".mcv." + getPackageVersion() + (isMojangMappingEnvironment ? "_m" : "");
         if(!hasPackageClass("objects.SeatEntity")) AVAILABLE = false;
     }
 
@@ -54,6 +48,16 @@ public class SVManager {
         return version.length > 2 ? Integer.parseInt(version[1]) == Version && Integer.parseInt(version[2]) == SubVersion : Integer.parseInt(version[1]) == Version && SubVersion == 0;
     }
 
+    public Object getLegacyPackageObject(String ClassName, Object... Objects) {
+        try {
+            Class<?> mcvClass = Class.forName(GPM.getClass().getPackage().getName() + ".mcv.v1_17_1." + ClassName);
+            if(Objects.length == 0) return mcvClass.getConstructor().newInstance();
+            Class<?>[] classes = Arrays.stream(Objects).map(Object::getClass).toArray(Class<?>[]::new);
+            return mcvClass.getConstructor(classes).newInstance(Objects);
+        } catch (Throwable e) { e.printStackTrace(); }
+        return null;
+    }
+
     public Object getPackageObject(String ClassName, Object... Objects) {
         try {
             Class<?> mcvClass = Class.forName(PACKAGE_PATH + "." + ClassName);
@@ -67,6 +71,14 @@ public class SVManager {
     public boolean hasPackageClass(String ClassName) {
         try {
             Class.forName(PACKAGE_PATH + "." + ClassName);
+            return true;
+        } catch (Throwable ignored) { }
+        return false;
+    }
+
+    public boolean isMojangMappingEnvironment() {
+        try {
+            Class.forName("net.minecraft.world.entity.Mob");
             return true;
         } catch (Throwable ignored) { }
         return false;

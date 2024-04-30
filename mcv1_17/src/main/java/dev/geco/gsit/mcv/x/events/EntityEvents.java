@@ -1,9 +1,10 @@
-package dev.geco.gsit.events;
+package dev.geco.gsit.mcv.x.events;
 
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
-import org.bukkit.event.entity.*;
+
+import org.spigotmc.event.entity.*;
 
 import dev.geco.gsit.GSitMain;
 import dev.geco.gsit.api.event.*;
@@ -25,13 +26,13 @@ public class EntityEvents implements Listener {
 
             Player player = (Player) Event.getEntity();
 
-            if (GPM.getSitManager().isSitting(player) && (!GPM.getCManager().GET_UP_SNEAK || (!GPM.getSitManager().removeSeat(player, GetUpReason.GET_UP, true)))) {
+            if(GPM.getSitManager().isSitting(player) && (!GPM.getCManager().GET_UP_SNEAK || (!GPM.getSitManager().removeSeat(player, GetUpReason.GET_UP, true)))) {
 
                 Event.setCancelled(true);
                 return;
             }
 
-            if (GPM.getPoseManager().isPosing(player) && (!GPM.getCManager().GET_UP_SNEAK || !GPM.getPoseManager().removePose(player, GetUpReason.GET_UP, true))) {
+            if(GPM.getPoseManager().isPosing(player) && (!GPM.getCManager().GET_UP_SNEAK || !GPM.getPoseManager().removePose(player, GetUpReason.GET_UP, true))) {
 
                 Event.setCancelled(true);
                 return;

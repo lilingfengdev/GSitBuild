@@ -11,7 +11,7 @@ public class DManager {
 
     private final GSitMain GPM;
 
-    private final int MAX_RETRIES = 3;
+    protected final int MAX_RETRIES = 3;
 
     private Connection connection;
     private String type = null;
@@ -40,11 +40,16 @@ public class DManager {
     private boolean reconnect() {
         try {
             if(type.equals("sqlite")) Class.forName("org.sqlite.JDBC");
-            connection = getConnection();
+            connection = getConnection(false);
             if(connection != null) {
-                if(!type.equals("sqlite")) execute("CREATE DATABASE IF NOT EXISTS " + database);
-                retries = 0;
-                return true;
+                if(!type.equals("sqlite")) {
+                    execute("CREATE DATABASE IF NOT EXISTS " + database);
+                    connection = getConnection(true);
+                }
+                if(connection != null) {
+                    retries = 0;
+                    return true;
+                }
             }
         } catch (Exception e) { e.printStackTrace(); }
         if(retries == MAX_RETRIES) return false;
@@ -52,10 +57,10 @@ public class DManager {
         return reconnect();
     }
 
-    private Connection getConnection() throws SQLException {
+    private Connection getConnection(boolean WithDatabase) throws SQLException {
         switch(type) {
             case "mysql":
-                return DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, password);
+                return DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + (WithDatabase ? "/" + database : ""), user, password);
             case "sqlite":
                 return DriverManager.getConnection("jdbc:sqlite:" + new File(GPM.getDataFolder(), "data/data.db").getPath());
         }
@@ -63,7 +68,7 @@ public class DManager {
     }
 
     public boolean execute(String Query, Object... Data) throws SQLException {
-        if(connection == null) throw new SQLException("missing database connection");
+        if(connection == null) throw new SQLException("missing " + type + " database connection");
         if(connection.isClosed() && !reconnect()) return false;
         PreparedStatement preparedStatement = connection.prepareStatement(Query);
         for(int i = 1; i <= Data.length; i++) preparedStatement.setObject(i, Data[i - 1]);
@@ -71,7 +76,7 @@ public class DManager {
     }
 
     public ResultSet executeAndGet(String Query, Object... Data) throws SQLException {
-        if(connection == null) throw new SQLException("missing database connection");
+        if(connection == null) throw new SQLException("missing " + type + " database connection");
         if(connection.isClosed() && !reconnect()) return null;
         PreparedStatement preparedStatement = connection.prepareStatement(Query);
         for(int i = 1; i <= Data.length; i++) preparedStatement.setObject(i, Data[i - 1]);
