@@ -9,7 +9,7 @@
     <parent>
         <groupId>dev.geco.gsit</groupId>
         <artifactId>GSit</artifactId>
-        <version>1.9.1</version>
+        <version>1.9.5</version>
     </parent>
 
     <build>
@@ -113,7 +113,7 @@
         </dependency>
         <dependency>
             <groupId>dev.geco.gsit</groupId>
-            <artifactId>v1_20_5_m</artifactId>
+            <artifactId>v1_21</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>

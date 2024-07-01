@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mcv1_19</artifactId>
+    <artifactId>mcv1_21</artifactId>
 
     <parent>
         <groupId>dev.geco.gsit</groupId>
@@ -13,8 +13,8 @@
     </parent>
 
     <properties>
-        <maven.compiler.release>17</maven.compiler.release>
-        <spigot.version>1.19-R0.1-SNAPSHOT</spigot.version>
+        <maven.compiler.release>21</maven.compiler.release>
+        <spigot.version>1.21-R0.1-SNAPSHOT</spigot.version>
     </properties>
 
     <dependencies>
@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>dev.geco.gsit</groupId>
-            <artifactId>mcv1_18_2</artifactId>
+            <artifactId>mcv1_20_5</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
